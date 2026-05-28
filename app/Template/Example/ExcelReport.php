@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Template;
+namespace App\Template\Example;
 
 class ExcelReport extends ReportGenerator {
     protected function formatData() {

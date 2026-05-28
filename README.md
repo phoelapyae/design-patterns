@@ -111,8 +111,37 @@ class CreateUsersTable extends Migration
 
 နောက်ကွယ်မှာ Laravel ရဲ့ Migrator စနစ်ကြီး (Template Controller) ကနေပြီး Table တွေ ဆောက်တော့မယ်ဆိုရင် ဘယ်လို Transaction တွေ ဖွင့်ရမယ်၊ ဘယ်လို Log မှတ်ရမယ်ဆိုတဲ့ အဆင့်တွေကို ပုံသေ မောင်းနှင်ပေးသွားပြီး၊ Handlers တွေအနေနဲ့ ကျွန်တော်တို့ ရေးထားတဲ့ up() သို့မဟုတ် down() ကို လှမ်းခေါ်ပေးသွားတာ ဖြစ်ပါတယ်။
 
+# Laravel ၏ Template Pattern: FormRequest (Validation)
+
+Laravel ရဲ့ Custom Validation Class (php artisan make:request) တွေကို ကြည့်ပါ။ သူတို့ဟာ FormRequest ဆိုတဲ့ Parent Class ကြီးကို Extends (ဆက်ခံ) လုပ်ထားကြပါတယ်။
+
+Laravel က နောက်ကွယ်မှာ Request တစ်ခု ဝင်လာရင် Authorization စစ်မယ် -> Validation စစ်မယ် ဆိုတဲ့ လုပ်ငန်းစဉ် (Template) ကို ချမှတ်ထားပြီးသားပါ။ ကျွန်တော်တို့ကိုတော့ authorize() နဲ့ rules() ဆိုတဲ့ နည်းလမ်းနှစ်ခုထဲမှာပဲ မိမိတို့ စိတ်ကြိုက် Logic တွေကို ဝင်ပြင်ခွင့် (Template ဖြည့်ခွင့်) ပေးထားတာ ဖြစ်ပါတယ်။
+
+```
+use Illuminate\Foundation\Http\FormRequest;
+
+class StorePostRequest extends FormRequest
+{
+    // ပုံသေစနစ်ကြီးထဲကနေ ကိုယ်တိုင်ဝင်ပြင်ရမည့် အဆင့် (၁)
+    public function authorize()
+    {
+        return true; 
+    }
+
+    // ပုံသေစနစ်ကြီးထဲကနေ ကိုယ်တိုင်ဝင်ပြင်ရမည့် အဆင့် (၂)
+    public function rules()
+    {
+        return [
+            'title' => 'required|max:255',
+        ];
+    }
+}
+```
+
 # ***ဘာကြောင့် သုံးသင့်လဲ? (အကျိုးကျေးဇူးများ)***
 
-***Code Reuse (ကုဒ်တွေ ထပ်မရေးရခြင်း): တူညီတဲ့ လုပ်ငန်းစဉ် အဆင့်ဆင့်တွေနဲ့ Logic တွေကို Parent Class ကြီးထဲမှာ တစ်ခါတည်း ရေးထားနိုင်လို့ ကုဒ်တွေ ထပ်ခါတလဲလဲ ရေးရခြင်းကို ကာကွယ်ပေးပါတယ်။***
+- Code Reuse (ကုဒ်တွေ ထပ်မရေးရခြင်း): တူညီတဲ့ လုပ်ငန်းစဉ် အဆင့်ဆင့်တွေနဲ့ Logic တွေကို Parent Class ကြီးထဲမှာ တစ်ခါတည်း ရေးထားနိုင်လို့ ကုဒ်တွေ ထပ်ခါတလဲလဲ ရေးရခြင်းကို ကာကွယ်ပေးပါတယ်။
 
-***Controlled Flexibility: Subclasses တွေကို စိတ်ကြိုက် ခြယ်လှယ်ခွင့် ပေးထားတယ် ဆိုသော်လည်း၊ ပင်မ စနစ်ကြီးရဲ့ Framework (လုပ်ငန်းစဉ်အဆင့်ဆင့်) ကိုတော့ ကျော်လွန် ဖျက်ဆီးလို့ မရအောင် ထိန်းချုပ်ပေးထားပါတယ်။***
+- Controlled Flexibility: Subclasses တွေကို စိတ်ကြိုက် ခြယ်လှယ်ခွင့် ပေးထားတယ် ဆိုသော်လည်း၊ ပင်မ စနစ်ကြီးရဲ့ Framework (လုပ်ငန်းစဉ်အဆင့်ဆင့်) ကိုတော့ ကျော်လွန် ဖျက်ဆီးလို့ မရအောင် ထိန်းချုပ်ပေးထားပါတယ်။
+
+- သင့်မှာ လုပ်ငန်းစဉ် အဆင့်ဆင့် (Algorithm Skeleton) ရှိပြီး၊ ၎င်းအဆင့်တွေကို ပုံသေသတ်မှတ်လျက် အသေးစိတ် အလုပ်လုပ်ပုံကိုပဲ Subclasses တွေဆီ လွှဲပေးချင်ရင် ➡️ Template Method Pattern ကို သုံးပါ။

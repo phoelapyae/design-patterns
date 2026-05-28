@@ -14,19 +14,3 @@ class RemoteControl {
         $this->command->execute();
     }
 }
-
-// --- လက်တွေ့ အသုံးပြုပုံ (Client Code) ---
-$light = new Light(); // Receiver
-
-$turnOn = new TurnOnLightCommand($light);
-$turnOff = new TurnOffLightCommand($light);
-
-$remote = new RemoteControl(); // Invoker
-
-// မီးဖွင့်မယ်
-$remote->setCommand($turnOn);
-$remote->pressButton(); // Output: The light is ON
-
-// မီးပိတ်မယ်
-$remote->setCommand($turnOff);
-$remote->pressButton(); // Output: The light is OFF
